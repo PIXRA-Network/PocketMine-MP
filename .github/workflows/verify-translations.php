@@ -23,13 +23,20 @@ declare(strict_types=1);
 
 namespace pocketmine\build\generate_known_translation_apis;
 
+use function array_fill_keys;
 use function count;
+use function explode;
+use function file_get_contents;
 use function fwrite;
 use function in_array;
+use function json_decode;
+use function json_encode;
 use function parse_ini_file;
-use function preg_match;
 use function preg_match_all;
+use function str_starts_with;
 use const INI_SCANNER_RAW;
+use const JSON_PRETTY_PRINT;
+use const JSON_THROW_ON_ERROR;
 use const PHP_EOL;
 use const STDERR;
 
@@ -86,6 +93,34 @@ function parse_language_file(string $path, string $code) : ?array{
 	return $lang;
 }
 
+function parse_mojang_language_defs(string $contents) : array{
+	$result = [];
+	foreach(explode("\n", $contents) as $line){
+		$stripped = explode("##", $line, 2)[0];
+		$kv = explode("=", $stripped, 2);
+		if(count($kv) !== 2){
+			continue;
+		}
+		$result[$kv[0]] = $kv[1];
+	}
+
+	return $result;
+}
+
+function verify_keys(array $pocketmine, array $mojang, array $knownBadKeys) : array{
+	$wrong = [];
+	foreach($pocketmine as $k => $v){
+		if(str_starts_with($k, "pocketmine.")){
+			continue;
+		}
+
+		if(!isset($mojang[$k]) && !isset($knownBadKeys[$k])){
+			$wrong[] = $k;
+		}
+	}
+	return $wrong;
+}
+
 if(count($argv) !== 2){
 	fwrite(STDERR, "Required arguments: path\n");
 	exit(1);
@@ -95,6 +130,26 @@ if($eng === null){
 	fwrite(STDERR, "Failed to parse eng.ini\n");
 	exit(1);
 }
+
+$mojangRaw = file_get_contents("https://raw.githubusercontent.com/Mojang/bedrock-samples/refs/heads/main/resource_pack/texts/en_US.lang");
+if($mojangRaw === false){
+	fwrite(STDERR, "Failed to fetch official Mojang sources for verification\n");
+	exit(1);
+}
+$mojang = parse_mojang_language_defs($mojangRaw);
+
+$knownBadKeysRaw = file_get_contents(__DIR__ . "/known-bad-keys.json");
+$knownBadKeys = $knownBadKeysRaw !== false ? json_decode($knownBadKeysRaw, associative: true, flags: JSON_THROW_ON_ERROR) : [];
+
+$badKeys = verify_keys($eng, $mojang, array_fill_keys($knownBadKeys, true));
+if(count($badKeys) !== 0){
+	fwrite(STDERR, "The following non-\"pocketmine.\" keys are not matched by Mojang sources and are not whitelisted:\n");
+	fwrite(STDERR, json_encode($badKeys, JSON_PRETTY_PRINT | JSON_THROW_ON_ERROR) . "\n");
+	fwrite(STDERR, "Keys must either match Mojang sources, or be prefixed with \"pocketmine.\"\n");
+	fwrite(STDERR, "Failure to do so will cause these to be shown incorrectly on clients, as the server won't translate them\n");
+	exit(1);
+}
+
 $exit = 0;
 foreach(new \RegexIterator(new \FilesystemIterator($argv[1], \FilesystemIterator::CURRENT_AS_PATHNAME), "/([a-z]+)\.ini$/", \RegexIterator::GET_MATCH) as $match){
 	$code = $match[1];
