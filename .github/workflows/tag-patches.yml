@@ -19,7 +19,7 @@ jobs:
       
       - name: Tag new version
         run: |
-          BASE_VERSION="2.23"
+          BASE_VERSION="2.24"
 
           PREVIOUS_TAG=$(git tag --list | awk -v s="$BASE_VERSION." 'index($0, s) == 1' | sort -r --version-sort | head -n1)
           echo "Previous tag is $PREVIOUS_TAG"
