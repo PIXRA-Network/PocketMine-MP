@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6314ae9a7919042f10bd17f0a3ef6e9d",
+    "content-hash": "38615db6f836b5b27037de13f5462370",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -204,16 +204,16 @@
         },
         {
             "name": "pocketmine/bedrock-data",
-            "version": "4.0.0+bedrock-1.21.60",
+            "version": "dev-feature/1.21.70",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/BedrockData.git",
-                "reference": "2e5f16ec2facac653f3f894f22eb831d880ba98e"
+                "reference": "b03047452655e984fb964b70b95a77899a0019d3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/BedrockData/zipball/2e5f16ec2facac653f3f894f22eb831d880ba98e",
-                "reference": "2e5f16ec2facac653f3f894f22eb831d880ba98e",
+                "url": "https://api.github.com/repos/pmmp/BedrockData/zipball/b03047452655e984fb964b70b95a77899a0019d3",
+                "reference": "b03047452655e984fb964b70b95a77899a0019d3",
                 "shasum": ""
             },
             "type": "library",
@@ -224,9 +224,9 @@
             "description": "Blobs of data generated from Minecraft: Bedrock Edition, used by PocketMine-MP",
             "support": {
                 "issues": "https://github.com/pmmp/BedrockData/issues",
-                "source": "https://github.com/pmmp/BedrockData/tree/bedrock-1.21.60"
+                "source": "https://github.com/pmmp/BedrockData/tree/feature/1.21.70"
             },
-            "time": "2025-02-16T15:56:56+00:00"
+            "time": "2025-03-24T17:37:23+00:00"
         },
         {
             "name": "pocketmine/bedrock-item-upgrade-schema",
@@ -256,7 +256,7 @@
         },
         {
             "name": "pocketmine/bedrock-protocol",
-            "version": "36.2.0+bedrock-1.21.60",
+            "version": "dev-bedrock-1.21.70",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/BedrockProtocol.git",
@@ -2919,7 +2919,10 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "pocketmine/bedrock-data": 20,
+        "pocketmine/bedrock-protocol": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
@@ -2954,5 +2957,5 @@
     "platform-overrides": {
         "php": "8.1.0"
     },
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
