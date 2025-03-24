@@ -260,12 +260,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/BedrockProtocol.git",
-                "reference": "6830e8a9ee9ecb6984b7b02f412473136ae92d50"
+                "reference": "427b2742d97005573e4b8f99f3e498bcbcbd5c2e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/BedrockProtocol/zipball/6830e8a9ee9ecb6984b7b02f412473136ae92d50",
-                "reference": "6830e8a9ee9ecb6984b7b02f412473136ae92d50",
+                "url": "https://api.github.com/repos/pmmp/BedrockProtocol/zipball/427b2742d97005573e4b8f99f3e498bcbcbd5c2e",
+                "reference": "427b2742d97005573e4b8f99f3e498bcbcbd5c2e",
                 "shasum": ""
             },
             "require": {
@@ -296,9 +296,9 @@
             "description": "An implementation of the Minecraft: Bedrock Edition protocol in PHP",
             "support": {
                 "issues": "https://github.com/pmmp/BedrockProtocol/issues",
-                "source": "https://github.com/pmmp/BedrockProtocol/tree/36.2.0+bedrock-1.21.60"
+                "source": "https://github.com/pmmp/BedrockProtocol/tree/bedrock-1.21.70"
             },
-            "time": "2025-03-14T17:17:21+00:00"
+            "time": "2025-03-24T16:24:03+00:00"
         },
         {
             "name": "pocketmine/binaryutils",
