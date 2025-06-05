@@ -256,7 +256,7 @@ parameters:
 			message: '#^Strict comparison using \=\=\= between 0 and 0 will always evaluate to true\.$#'
 			identifier: identical.alwaysTrue
 			count: 1
-			path: ../rules/UnsafeForeachArrayOfStringRule.php
+			path: ../rules/UnsafeForeachArrayWithStringKeysRule.php
 
 		-
 			message: '#^Call to method pocketmine\\network\\mcpe\\convert\\TypeConverter\:\:__protocolConstruct\(\) on a separate line has no effect\.$#'
