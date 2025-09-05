@@ -59,7 +59,8 @@
    },
    "replace": {
       "symfony/polyfill-ctype": "*",
-      "symfony/polyfill-mbstring": "*"
+      "symfony/polyfill-mbstring": "*",
+      "pocketmine/pocketmine-mp": "*"
    },
    "autoload": {
       "psr-4": {
