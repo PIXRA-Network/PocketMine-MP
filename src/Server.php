@@ -1804,6 +1804,9 @@ class Server{
 		return $this->forceLanguage;
 	}
 
+	/**
+	 * @internal
+	 */
 	public function getAuthKeyProvider() : AuthKeyProvider{
 		return $this->authKeyProvider;
 	}
