@@ -341,7 +341,7 @@ class LoginPacketHandler extends PacketHandler{
 	/**
 	 * @phpstan-return \Closure(object, string, mixed) : void
 	 */
-	protected function warnUndefinedJsonPropertyHandler(string $context) : \Closure{
+	private function warnUndefinedJsonPropertyHandler(string $context) : \Closure{
 		return fn(object $object, string $name, mixed $value) => $this->session->getLogger()->warning(
 			"$context: Unexpected JSON property for " . (new \ReflectionClass($object))->getShortName() . ": " . $name . " = " . var_export($value, return: true)
 		);
