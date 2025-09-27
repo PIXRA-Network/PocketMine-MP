@@ -488,7 +488,6 @@ class NetworkSession{
 			$decodeTimings->startTiming();
 			try{
 				$stream = new ByteBufferReader($buffer);
-
 				try{
 					$packet->decode($stream, $this->getProtocolId());
 				}catch(PacketDecodeException $e){

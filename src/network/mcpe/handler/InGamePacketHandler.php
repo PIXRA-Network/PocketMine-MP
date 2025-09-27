@@ -794,7 +794,7 @@ class InGamePacketHandler extends PacketHandler{
 
 		try{
 			if(!$block->updateFaceText($this->player, $frontFace, $text)){
-				foreach($this->player->getWorld()->createBlockUpdatePackets([$pos]) as $updatePacket){
+				foreach($this->player->getWorld()->createBlockUpdatePackets($this->session->getTypeConverter(), [$pos]) as $updatePacket){
 					$this->session->sendDataPacket($updatePacket);
 				}
 				return false;

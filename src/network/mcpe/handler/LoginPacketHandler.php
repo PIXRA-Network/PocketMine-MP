@@ -52,7 +52,6 @@ use Ramsey\Uuid\UuidInterface;
 use function chr;
 use function count;
 use function gettype;
-use function in_array;
 use function is_array;
 use function is_object;
 use function json_decode;
@@ -94,7 +93,7 @@ class LoginPacketHandler extends PacketHandler{
 			$authInfo->Token = "";
 		}
 
-		if($authInfo?->AuthenticationType === AuthenticationType::FULL->value){
+		if($authInfo->AuthenticationType === AuthenticationType::FULL->value){
 			try{
 				[$headerArray, $claimsArray,] = JwtUtils::parse($authInfo->Token);
 			}catch(JwtException $e){

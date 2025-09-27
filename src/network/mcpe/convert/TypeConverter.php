@@ -67,8 +67,8 @@ use pocketmine\utils\Utils;
 use pocketmine\world\format\io\GlobalItemDataHandlers;
 use function count;
 use function get_class;
-use function spl_object_id;
 use function hash;
+use function spl_object_id;
 
 class TypeConverter{
 	use ProtocolSingletonTrait {
