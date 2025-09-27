@@ -21,26 +21,16 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\item;
+namespace pocketmine\entity;
 
-use pocketmine\world\sound\FireworkExplosionSound;
-use pocketmine\world\sound\FireworkLargeExplosionSound;
-use pocketmine\world\sound\Sound;
+/**
+ * Decorator for entities that will never be saved with a chunk.
+ * Entities implementing this interface are not required to register a save ID.
+ *
+ * This differs from {@link Entity::canSaveWithChunk()} because it can't be changed after the entity is created.
+ * We can't use canSaveWithChunk() to decide whether an entity needs a save ID, but we can use an interface like this.
+ * An attribute would also work, but `instanceof NonSaveable` is easier.
+ */
+interface NeverSavedWithChunkEntity{
 
-enum FireworkRocketType{
-	case SMALL_BALL;
-	case LARGE_BALL;
-	case STAR;
-	case CREEPER;
-	case BURST;
-
-	public function getExplosionSound() : Sound{
-		return match($this){
-			self::SMALL_BALL,
-			self::STAR,
-			self::CREEPER,
-			self::BURST => new FireworkExplosionSound(),
-			self::LARGE_BALL => new FireworkLargeExplosionSound(),
-		};
-	}
 }

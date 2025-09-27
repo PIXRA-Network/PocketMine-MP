@@ -21,26 +21,25 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\item;
+namespace pocketmine\network\mcpe\auth;
 
-use pocketmine\world\sound\FireworkExplosionSound;
-use pocketmine\world\sound\FireworkLargeExplosionSound;
-use pocketmine\world\sound\Sound;
+final class AuthKeyring{
 
-enum FireworkRocketType{
-	case SMALL_BALL;
-	case LARGE_BALL;
-	case STAR;
-	case CREEPER;
-	case BURST;
+	/**
+	 * @param string[] $keys
+	 * @phpstan-param array<string, string> $keys
+	 */
+	public function __construct(
+		private string $issuer,
+		private array $keys
+	){}
 
-	public function getExplosionSound() : Sound{
-		return match($this){
-			self::SMALL_BALL,
-			self::STAR,
-			self::CREEPER,
-			self::BURST => new FireworkExplosionSound(),
-			self::LARGE_BALL => new FireworkLargeExplosionSound(),
-		};
+	public function getIssuer() : string{ return $this->issuer; }
+
+	/**
+	 * Returns a (raw) DER public key associated with the given key ID
+	 */
+	public function getKey(string $keyId) : ?string{
+		return $this->keys[$keyId] ?? null;
 	}
 }

@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "721dd0b0bb31cf4908e1af70285c7fc5",
+    "content-hash": "fb79f6154f2b0bb0a8258bc984ec6901",
     "packages": [
         {
             "name": "adhocore/json-comment",
@@ -156,15 +156,16 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/NetherGamesMC/BedrockProtocol.git",
-                "reference": "0315828046946a786271cf916627d42845e77246"
+                "reference": "f78f78dbc2d89abd0669cfe8eb6efd57908dd94d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/NetherGamesMC/BedrockProtocol/zipball/0315828046946a786271cf916627d42845e77246",
-                "reference": "0315828046946a786271cf916627d42845e77246",
+                "url": "https://api.github.com/repos/NetherGamesMC/BedrockProtocol/zipball/f78f78dbc2d89abd0669cfe8eb6efd57908dd94d",
+                "reference": "f78f78dbc2d89abd0669cfe8eb6efd57908dd94d",
                 "shasum": ""
             },
             "require": {
+                "ext-encoding": "~1.0.0",
                 "ext-json": "*",
                 "php": "^8.1",
                 "pocketmine/binaryutils": "^0.2.0",
@@ -203,7 +204,7 @@
             "support": {
                 "source": "https://github.com/NetherGamesMC/BedrockProtocol/tree/master"
             },
-            "time": "2025-08-06T21:38:25+00:00"
+            "time": "2025-09-27T17:22:06+00:00"
         },
         {
             "name": "netresearch/jsonmapper",
@@ -584,16 +585,16 @@
         },
         {
             "name": "pocketmine/nbt",
-            "version": "1.1.1",
+            "version": "1.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/pmmp/NBT.git",
-                "reference": "c3c7b0a7295daeaf7873d90fed5c5d10381d12e1"
+                "reference": "51b8d6a97065fb93e0b4f660b65164b6e1ed2fff"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/pmmp/NBT/zipball/c3c7b0a7295daeaf7873d90fed5c5d10381d12e1",
-                "reference": "c3c7b0a7295daeaf7873d90fed5c5d10381d12e1",
+                "url": "https://api.github.com/repos/pmmp/NBT/zipball/51b8d6a97065fb93e0b4f660b65164b6e1ed2fff",
+                "reference": "51b8d6a97065fb93e0b4f660b65164b6e1ed2fff",
                 "shasum": ""
             },
             "require": {
@@ -603,7 +604,8 @@
             },
             "require-dev": {
                 "phpstan/extension-installer": "^1.0",
-                "phpstan/phpstan": "2.1.0",
+                "phpstan/phpstan": "2.1.27",
+                "phpstan/phpstan-phpunit": "^2.0",
                 "phpstan/phpstan-strict-rules": "^2.0",
                 "phpunit/phpunit": "^9.5"
             },
@@ -620,9 +622,9 @@
             "description": "PHP library for working with Named Binary Tags",
             "support": {
                 "issues": "https://github.com/pmmp/NBT/issues",
-                "source": "https://github.com/pmmp/NBT/tree/1.1.1"
+                "source": "https://github.com/pmmp/NBT/tree/1.2.0"
             },
-            "time": "2025-03-09T01:46:03+00:00"
+            "time": "2025-09-19T18:09:30+00:00"
         },
         {
             "name": "pocketmine/raklib",
@@ -2807,6 +2809,7 @@
         "ext-ctype": "*",
         "ext-curl": "*",
         "ext-date": "*",
+        "ext-encoding": "~1.0.0",
         "ext-gmp": "*",
         "ext-hash": "*",
         "ext-igbinary": "^3.0.1",

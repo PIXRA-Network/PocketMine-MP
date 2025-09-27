@@ -21,26 +21,15 @@
 
 declare(strict_types=1);
 
-namespace pocketmine\item;
+namespace pocketmine\world\sound;
 
-use pocketmine\world\sound\FireworkExplosionSound;
-use pocketmine\world\sound\FireworkLargeExplosionSound;
-use pocketmine\world\sound\Sound;
+use pocketmine\math\Vector3;
+use pocketmine\network\mcpe\protocol\LevelSoundEventPacket;
+use pocketmine\network\mcpe\protocol\types\LevelSoundEvent;
 
-enum FireworkRocketType{
-	case SMALL_BALL;
-	case LARGE_BALL;
-	case STAR;
-	case CREEPER;
-	case BURST;
+class TridentThrowSound implements Sound{
 
-	public function getExplosionSound() : Sound{
-		return match($this){
-			self::SMALL_BALL,
-			self::STAR,
-			self::CREEPER,
-			self::BURST => new FireworkExplosionSound(),
-			self::LARGE_BALL => new FireworkLargeExplosionSound(),
-		};
+	public function encode(Vector3 $pos) : array{
+		return [LevelSoundEventPacket::nonActorSound(LevelSoundEvent::ITEM_TRIDENT_THROW, $pos, false)];
 	}
 }
