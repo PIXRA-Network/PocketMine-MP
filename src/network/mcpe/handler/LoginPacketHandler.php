@@ -49,6 +49,7 @@ use pocketmine\player\XboxLivePlayerInfo;
 use pocketmine\Server;
 use Ramsey\Uuid\Uuid;
 use Ramsey\Uuid\UuidInterface;
+use function base64_decode;
 use function chr;
 use function count;
 use function gettype;
@@ -84,8 +85,11 @@ class LoginPacketHandler extends PacketHandler{
 	}
 
 	public function handleLogin(LoginPacket $packet) : bool{
-		if($this->session->getProtocolId() >= ProtocolInfo::PROTOCOL_1_21_90){
+		if($this->session->getProtocolId() >= ProtocolInfo::PROTOCOL_1_21_93){
 			$authInfo = $this->parseAuthInfo($packet->authInfoJson);
+		}elseif($this->session->getProtocolId() >= ProtocolInfo::PROTOCOL_1_21_90){
+			$authInfo = $this->parseAuthInfo($packet->authInfoJson);
+			$authInfo->AuthenticationType = AuthenticationType::SELF_SIGNED->value;
 		}else{
 			$authInfo = new AuthenticationInfo();
 			$authInfo->AuthenticationType = AuthenticationType::SELF_SIGNED->value;
@@ -127,17 +131,44 @@ class LoginPacketHandler extends PacketHandler{
 			}catch(\JsonMapper_Exception $e){
 				throw PacketHandlingException::wrap($e, "Error mapping self-signed certificate chain");
 			}
-			if(count($chain->chain) > 1 || !isset($chain->chain[0])){
-				throw new PacketHandlingException("Expected exactly one certificate in self-signed certificate chain, got " . count($chain->chain));
-			}
+			if($this->session->getProtocolId() >= ProtocolInfo::PROTOCOL_1_21_93){
+				if(count($chain->chain) > 1 || !isset($chain->chain[0])){
+					throw new PacketHandlingException("Expected exactly one certificate in self-signed certificate chain, got " . count($chain->chain));
+				}
 
-			try{
-				[, $claimsArray, ] = JwtUtils::parse($chain->chain[0]);
-			}catch(JwtException $e){
-				throw PacketHandlingException::wrap($e, "Error parsing self-signed certificate");
-			}
-			if(!isset($claimsArray["extraData"]) || !is_array($claimsArray["extraData"])){
-				throw new PacketHandlingException("Expected \"extraData\" to be present in self-signed certificate");
+				try{
+					[, $claimsArray, ] = JwtUtils::parse($chain->chain[0]);
+				}catch(JwtException $e){
+					throw PacketHandlingException::wrap($e, "Error parsing self-signed certificate");
+				}
+				if(!isset($claimsArray["extraData"]) || !is_array($claimsArray["extraData"])){
+					throw new PacketHandlingException("Expected \"extraData\" to be present in self-signed certificate");
+				}
+			}else{
+				$claimsArray = null;
+
+				foreach($chain->chain as $jwt){
+					try{
+						[, $claims, ] = JwtUtils::parse($jwt);
+					}catch(JwtException $e){
+						throw PacketHandlingException::wrap($e, "Error parsing legacy certificate");
+					}
+					if(isset($claims["extraData"])){
+						if($claimsArray !== null){
+							throw new PacketHandlingException("Multiple certificates in self-signed certificate chain contain \"extraData\" field");
+						}
+
+						if(!is_array($claims["extraData"])){
+							throw new PacketHandlingException("'extraData' key should be an array");
+						}
+
+						$claimsArray = $claims;
+					}
+				}
+
+				if($claimsArray === null){
+					throw new PacketHandlingException("'extraData' not found in legacy chain data");
+				}
 			}
 
 			try{
@@ -151,7 +182,7 @@ class LoginPacketHandler extends PacketHandler{
 			}
 			$legacyUuid = Uuid::fromString($claims->identity);
 			$username = $claims->displayName;
-			$xuid = "";
+			$xuid = $this->session->getProtocolId() >= ProtocolInfo::PROTOCOL_1_21_93 ? "" : $claims->XUID;
 
 			$authRequired = $this->processLoginCommon($packet, $username, $legacyUuid, $xuid);
 			if($authRequired === null){
@@ -334,7 +365,10 @@ class LoginPacketHandler extends PacketHandler{
 	protected function processSelfSignedLogin(array $legacyCertificate, string $clientDataJwt, bool $authRequired) : void{
 		$this->session->setHandler(null); //drop packets received during login verification
 
-		$rootAuthKeyDer = $this->session->getProtocolId() >= ProtocolInfo::PROTOCOL_1_21_90 ? null : ProcessLegacyLoginTask::LEGACY_MOJANG_ROOT_PUBLIC_KEY;
+		$rootAuthKeyDer = $this->session->getProtocolId() >= ProtocolInfo::PROTOCOL_1_21_93 ? null : base64_decode(ProcessLegacyLoginTask::LEGACY_MOJANG_ROOT_PUBLIC_KEY, true);
+		if($rootAuthKeyDer === false){ //should never happen unless the constant is messed up
+			throw new \InvalidArgumentException("Failed to base64-decode hardcoded Mojang root public key");
+		}
 		$this->server->getAsyncPool()->submitTask(new ProcessLegacyLoginTask($legacyCertificate, $clientDataJwt, rootAuthKeyDer: $rootAuthKeyDer, authRequired: $authRequired, onCompletion: $this->authCallback));
 	}
 
