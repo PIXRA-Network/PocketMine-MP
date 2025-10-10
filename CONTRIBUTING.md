@@ -1,9 +1,3 @@
-![](http://cdn.pocketmine.net/img/PocketMine-MP-h.png)
-
-# PocketMine-MP Contribution Guidelines
-
-PocketMine-MP is an open source project, and contributions from the community are welcomed, as long as they comply with our quality standards and licensing.
-
 Code contributions must be submitted using [GitHub Pull Requests](https://github.com/pmmp/PocketMine-MP/pulls), where they will be reviewed by maintainers.
 
 Small contributions (e.g. minor bug fixes) can be submitted as pull requests directly.
