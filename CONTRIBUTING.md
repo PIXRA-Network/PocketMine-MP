@@ -131,7 +131,7 @@ The following are required as a minimum for pull requests. PRs that don't meet t
 - **Start small.** Try fixing minor bugs or doing something isolated (e.g. adding a new block or item) before attempting larger changes.
   - This helps you get familiar with the codebase, the contribution process, and the expectations of maintainers.
   - Check out ["Easy task" issues](https://github.com/pmmp/PocketMine-MP/issues?q=is%3Aissue+is%3Aopen+label%3A%22Easy+task%22) on the issues page for something that you could tackle without too much effort.
-- **Do not copy-paste other people's code**. Many PRs involve discussion about the changes, and changes are often requested by reviewers. If you don't understand the code you're copy-pasting, your PR is likely to fail.
+- **Do not copy-paste other people's code (or code written by AIs like ChatGPT)**. You'll likely be asked to make changes by reviewers. If you don't understand the code you're submitting, your PR is likely to fail.
 - **Do not edit code directly on github.com.** We recommend learning how to use [`git`](https://git-scm.com). `git` allows you to "clone" a repository onto your computer, so that you can make changes using an IDE.
 - **Use an IDE, not a text editor.** We recommend PhpStorm or VSCode.
 - **Do not make large pull requests without an RFC.**
