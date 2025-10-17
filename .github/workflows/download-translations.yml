@@ -36,7 +36,7 @@ jobs:
 
       - name: Post-process placeholders back into PocketMine format
         run: |
-          sed -i -r 's/\{([A-Za-z\d]+)\}/\{%\1\}/g' *.ini
+          sed -i -r 's/\{([A-Za-z0-9]+)\}/\{%\1\}/g' *.ini
           git diff
           git status
 
