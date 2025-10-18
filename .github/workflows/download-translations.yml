@@ -4,7 +4,6 @@ on:
   schedule:
     - cron: 0 21 * * * #every day at 9pm
   workflow_dispatch:
-  push:
 
 jobs:
   download:
@@ -13,7 +12,11 @@ jobs:
 
     strategy:
       matrix:
-        branch: [ stable ]
+        branch:
+          - stable
+          - minor-next
+          - major-next
+      fail-fast: false
 
     steps:
       - uses: actions/checkout@v4
@@ -35,12 +38,14 @@ jobs:
           CROWDIN_PERSONAL_TOKEN: ${{ secrets.CROWDIN_PERSONAL_TOKEN }}
 
       - name: Post-process placeholders back into PocketMine format
+        working-directory: resources/translations
         run: |
           sed -i -r 's/\{([A-Za-z0-9]+)\}/\{%\1\}/g' *.ini
           git diff
           git status
 
       - name: Delete translation files with no translations
+        working-directory: resources/translations
         run: |
           for file in *.ini; do
             if grep -q -P '^[A-Za-z0-9_\-\.]+=' $file; then
@@ -55,7 +60,7 @@ jobs:
         uses: peter-evans/create-pull-request@v7
         with:
           add-paths: '*.ini'
-          commit-message: 'New translations from Crowdin'
+          commit-message: 'New translations from Crowdin (${{ matrix.branch }})'
           branch: crowdin-auto-fetch/${{ matrix.branch }}
           title: 'New translations from Crowdin'
           base: ${{ matrix.branch }}

@@ -3,7 +3,7 @@ name: Verify translations
 on:
   push:
     branches-ignore:
-      - 'l10n/*'
+      - 'crowdin-auto-fetch/*' #this will be run on pull_request anyway
   pull_request:
   workflow_dispatch:
 
@@ -20,4 +20,4 @@ jobs:
           php-version: 8.3
 
       - name: Verify translations
-        run: php .github/workflows/verify-translations.php ${{ github.workspace }}
+        run: php .github/workflows/verify-translations.php ${{ github.workspace }}/resources/translations

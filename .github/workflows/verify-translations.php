@@ -29,6 +29,7 @@ use function explode;
 use function file_get_contents;
 use function fwrite;
 use function in_array;
+use function is_array;
 use function json_decode;
 use function json_encode;
 use function parse_ini_file;
@@ -38,6 +39,7 @@ use const INI_SCANNER_RAW;
 use const JSON_PRETTY_PRINT;
 use const JSON_THROW_ON_ERROR;
 use const PHP_EOL;
+use const PHP_INT_MAX;
 use const STDERR;
 
 /**
@@ -85,6 +87,10 @@ function verify_translations(array $baseLanguageDef, string $altLanguageName, ar
 	return $ok;
 }
 
+/**
+ * @return string[]|null
+ * @phpstan-return array<string, string>|null
+ */
 function parse_language_file(string $path, string $code) : ?array{
 	$lang = parse_ini_file($path . "/" . "$code.ini", false, INI_SCANNER_RAW);
 	if($lang === false){
@@ -93,9 +99,13 @@ function parse_language_file(string $path, string $code) : ?array{
 	return $lang;
 }
 
+/**
+ * @return string[]
+ * @phpstan-return array<string, string>
+ */
 function parse_mojang_language_defs(string $contents) : array{
 	$result = [];
-	foreach(explode("\n", $contents) as $line){
+	foreach(explode("\n", $contents, limit: PHP_INT_MAX) as $line){
 		$stripped = explode("##", $line, 2)[0];
 		$kv = explode("=", $stripped, 2);
 		if(count($kv) !== 2){
@@ -107,6 +117,17 @@ function parse_mojang_language_defs(string $contents) : array{
 	return $result;
 }
 
+/**
+ * @param string[] $pocketmine
+ * @param string[] $mojang
+ * @param string[] $knownBadKeys
+ * @phpstan-param array<string, string> $pocketmine
+ * @phpstan-param array<string, string> $mojang
+ * @phpstan-param array<string, bool> $knownBadKeys
+ *
+ * @return string[]
+ * @phpstan-return list<string>
+ */
 function verify_keys(array $pocketmine, array $mojang, array $knownBadKeys) : array{
 	$wrong = [];
 	foreach($pocketmine as $k => $v){
@@ -138,8 +159,21 @@ if($mojangRaw === false){
 }
 $mojang = parse_mojang_language_defs($mojangRaw);
 
-$knownBadKeysRaw = file_get_contents(__DIR__ . "/known-bad-keys.json");
-$knownBadKeys = $knownBadKeysRaw !== false ? json_decode($knownBadKeysRaw, associative: true, flags: JSON_THROW_ON_ERROR) : [];
+$knownBadKeysRaw = file_get_contents($argv[1] . "/known-bad-keys.json");
+$knownBadKeysDecoded = $knownBadKeysRaw !== false ? json_decode($knownBadKeysRaw, associative: true, flags: JSON_THROW_ON_ERROR) : [];
+
+if(!is_array($knownBadKeysDecoded)){
+	fwrite(STDERR, "known-bad-keys.json should contain an array of strings\n");
+	exit(1);
+}
+$knownBadKeys = [];
+foreach($knownBadKeysDecoded as $key){
+	if(!is_string($key)){
+		fwrite(STDERR, "known-bad-keys.json should contain an array of strings\n");
+		exit(1);
+	}
+	$knownBadKeys[] = $key;
+}
 
 $badKeys = verify_keys($eng, $mojang, array_fill_keys($knownBadKeys, true));
 if(count($badKeys) !== 0){
@@ -151,6 +185,10 @@ if(count($badKeys) !== 0){
 }
 
 $exit = 0;
+/**
+ * @var string[] $match
+ * @phpstan-var array{0: string, 1: string} $match
+ */
 foreach(new \RegexIterator(new \FilesystemIterator($argv[1], \FilesystemIterator::CURRENT_AS_PATHNAME), "/([a-z]+)\.ini$/", \RegexIterator::GET_MATCH) as $match){
 	$code = $match[1];
 	if($code === "eng"){
