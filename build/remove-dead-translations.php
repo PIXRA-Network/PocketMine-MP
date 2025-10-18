@@ -59,6 +59,12 @@ function parse_language_file(string $path, string $file) : ?array{
 	}
 	return $lang;
 }
+
+if(count($argv) !== 2){
+	fwrite(STDERR, "Usage: php remove-dead-translations.php <translations folder>\n");
+	exit(1);
+}
+
 $base = parse_language_file($argv[1], "eng.ini");
 
 $fileList = scandir($argv[1]);
