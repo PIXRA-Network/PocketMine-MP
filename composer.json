@@ -1,8 +1,8 @@
 {
    "name": "nethergamesmc/pocketmine-mp",
-   "description": "A server software for Minecraft: Bedrock Edition written in PHP",
+   "description": "PM-NG Modification Used in PixraNetwork",
    "type": "project",
-   "homepage": "https://pmmp.io",
+   "homepage": "https://github.com/PIXRA-Network/PocketMine-MP",
    "license": "LGPL-3.0",
    "require": {
       "php": "^8.1",
@@ -33,11 +33,11 @@
       "ext-zlib": ">=1.2.11",
       "composer-runtime-api": "^2.0",
       "adhocore/json-comment": "~1.2.0",
+      "nethergamesmc/bedrock-data": "dev-master",
+      "nethergamesmc/bedrock-protocol": "dev-master",
       "netresearch/jsonmapper": "~v5.0.0",
       "pocketmine/bedrock-block-upgrade-schema": "~5.2.0+bedrock-1.21.110",
-      "nethergamesmc/bedrock-data": "dev-master",
       "pocketmine/bedrock-item-upgrade-schema": "~1.16.0+bedrock-1.21.110",
-      "nethergamesmc/bedrock-protocol": "dev-master",
       "pocketmine/binaryutils": "^0.2.1",
       "pocketmine/callback-validator": "^1.0.2",
       "pocketmine/color": "^0.3.0",
@@ -49,7 +49,8 @@
       "pocketmine/raklib-ipc": "~1.0.0",
       "pocketmine/snooze": "^0.5.0",
       "ramsey/uuid": "~4.9.0",
-      "symfony/filesystem": "~6.4.0"
+      "symfony/filesystem": "~6.4.0",
+      "brick/math": "^0.14.0"
    },
    "require-dev": {
       "phpstan/phpstan": "2.1.25",
@@ -77,9 +78,6 @@
       }
    },
    "config": {
-      "platform": {
-         "php": "8.1.0"
-      },
       "sort-packages": true
    },
    "scripts": {
@@ -101,11 +99,11 @@
    "repositories": [
       {
          "type": "vcs",
-         "url":  "git@github.com:NetherGamesMC/BedrockProtocol.git"
+         "url":  "https://github.com/NetherGamesMC/BedrockProtocol.git"
       },
       {
          "type": "vcs",
-         "url":  "git@github.com:NetherGamesMC/BedrockData.git"
+         "url":  "https://github.com/NetherGamesMC/BedrockData.git"
       }
    ]
 }
