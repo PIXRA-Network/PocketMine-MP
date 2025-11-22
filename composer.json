@@ -1,8 +1,8 @@
 {
    "name": "nethergamesmc/pocketmine-mp",
-   "description": "A server software for Minecraft: Bedrock Edition written in PHP",
+   "description": "PM-NG Modification Used in PixraNetwork",
    "type": "project",
-   "homepage": "https://pmmp.io",
+   "homepage": "https://github.com/PIXRA-Network/PocketMine-MP",
    "license": "LGPL-3.0",
    "require": {
       "php": "^8.1",
@@ -49,7 +49,8 @@
       "pocketmine/raklib-ipc": "~1.0.0",
       "pocketmine/snooze": "^0.5.0",
       "ramsey/uuid": "~4.9.0",
-      "symfony/filesystem": "~6.4.0"
+      "symfony/filesystem": "~6.4.0",
+      "brick/math": "^0.14.0"
    },
    "require-dev": {
       "phpstan/phpstan": "2.1.25",
@@ -77,9 +78,6 @@
       }
    },
    "config": {
-      "platform": {
-         "php": "8.1.0"
-      },
       "sort-packages": true
    },
    "scripts": {
