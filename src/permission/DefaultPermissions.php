@@ -31,7 +31,8 @@ use function count;
 use function preg_last_error_msg;
 use function preg_replace;
 
-abstract class DefaultPermissions{
+abstract class DefaultPermissions
+{
 	public const ROOT_CONSOLE = Names::GROUP_CONSOLE;
 	public const ROOT_OPERATOR = Names::GROUP_OPERATOR;
 	public const ROOT_USER = Names::GROUP_USER;
@@ -40,11 +41,12 @@ abstract class DefaultPermissions{
 	 * @param Permission[] $grantedBy
 	 * @param Permission[] $deniedBy
 	 */
-	public static function registerPermission(Permission $candidate, array $grantedBy = [], array $deniedBy = []) : Permission{
-		foreach($grantedBy as $permission){
+	public static function registerPermission(Permission $candidate, array $grantedBy = [], array $deniedBy = []): Permission
+	{
+		foreach ($grantedBy as $permission) {
 			$permission->addChild($candidate->getName(), true);
 		}
-		foreach($deniedBy as $permission){
+		foreach ($deniedBy as $permission) {
 			$permission->addChild($candidate->getName(), false);
 		}
 		PermissionManager::getInstance()->addPermission($candidate);
@@ -55,27 +57,29 @@ abstract class DefaultPermissions{
 	/**
 	 * @param Permission[] $grantedBy
 	 */
-	private static function registerNoArgsDesc(string $permission, array $grantedBy) : Permission{
+	private static function registerNoArgsDesc(string $permission, array $grantedBy): Permission
+	{
 		$translationKey = preg_replace("/^pocketmine\./", "pocketmine.permission.", $permission) ?? throw new AssumptionFailedError(preg_last_error_msg());
 		$parameters = KnownTranslationParameterInfo::TABLE[$translationKey] ?? null;
-		if($parameters === null){
+		if ($parameters === null) {
 			throw new \InvalidArgumentException("Expected translation key $translationKey not defined");
 		}
-		if(count($parameters) !== 0){
+		if (count($parameters) !== 0) {
 			throw new \InvalidArgumentException("Cannot use this function to register a permission with a parameterisable description string");
 		}
 		$translatable = new Translatable($translationKey);
 		return self::registerPermission(new Permission($permission, $translatable), $grantedBy);
 	}
 
-	public static function registerCorePermissions() : void{
+	public static function registerCorePermissions(): void
+	{
 		$consoleRoot = self::registerNoArgsDesc(self::ROOT_CONSOLE, []);
 		$operatorRoot = self::registerNoArgsDesc(self::ROOT_OPERATOR, [$consoleRoot]);
 		$everyoneRoot = self::registerNoArgsDesc(self::ROOT_USER, [$operatorRoot]);
 
 		self::registerNoArgsDesc(Names::COMMAND_DUMPMEMORY, [$consoleRoot]);
 
-		foreach([
+		foreach ([
 			Names::BROADCAST_ADMIN,
 			Names::COMMAND_BAN_IP,
 			Names::COMMAND_BAN_LIST,
@@ -130,19 +134,19 @@ abstract class DefaultPermissions{
 			Names::COMMAND_WHITELIST_REMOVE,
 			Names::COMMAND_XP_OTHER,
 			Names::COMMAND_XP_SELF,
-		] as $permission){
+			Names::COMMAND_VERSION,
+			Names::COMMAND_CLEAR_SELF,
+			Names::COMMAND_KILL_SELF,
+		] as $permission) {
 			self::registerNoArgsDesc($permission, [$operatorRoot]);
 		}
 
-		foreach([
-			Names::COMMAND_KILL_SELF,
+		foreach ([
 			Names::COMMAND_ME,
 			Names::COMMAND_HELP,
 			Names::BROADCAST_USER,
-			Names::COMMAND_CLEAR_SELF,
 			Names::COMMAND_TELL,
-			Names::COMMAND_VERSION,
-		] as $permission){
+		] as $permission) {
 			self::registerNoArgsDesc($permission, [$everyoneRoot]);
 		}
 	}
